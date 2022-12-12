@@ -1,0 +1,51 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Curriculum.sol": "Curriculum"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Curriculum.sol": {
+			"keccak256": "0x954142cb2508c60504ba342e5036de48de1dc2908a71c2cd052be88059cfde6a",
+			"license": "Apache 2.0",
+			"urls": [
+				"bzz-raw://2b029d7f7795750958ca8586dbc92ed960e64e59b2bf295bfa2f95be1ad2143c",
+				"dweb:/ipfs/QmdX671TPLKw7TS4u2qS8WPnoaHZhjyhW5tELmbfnwnHMc"
+			]
+		}
+	},
+	"version": 1
+}
