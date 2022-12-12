@@ -9,6 +9,71 @@
 				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "checker",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hashCurriculum",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "user",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "validated",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -39,11 +104,11 @@
 	},
 	"sources": {
 		"Curriculum.sol": {
-			"keccak256": "0x954142cb2508c60504ba342e5036de48de1dc2908a71c2cd052be88059cfde6a",
+			"keccak256": "0xd6aded51fc87cf7c188bbc9a7cfd3fa25454547bb209fdd9db5a9b85a7333a7c",
 			"license": "Apache 2.0",
 			"urls": [
-				"bzz-raw://2b029d7f7795750958ca8586dbc92ed960e64e59b2bf295bfa2f95be1ad2143c",
-				"dweb:/ipfs/QmdX671TPLKw7TS4u2qS8WPnoaHZhjyhW5tELmbfnwnHMc"
+				"bzz-raw://93ff59d5b7cafbf90c9333724de1679245c39b430d70f0509d7155850e8e6ece",
+				"dweb:/ipfs/QmYFpJVeYhtnttf5y6PHL6CqgzQTxT1UjYfsf7mc7h4L4U"
 			]
 		}
 	},
