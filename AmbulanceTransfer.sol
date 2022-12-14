@@ -2,48 +2,78 @@
 
 pragma solidity >0.8.14;
 
+// Informacion del Smart Contract
+// Nombre: Translado en Ambulancia
+// Logica: Implementa el translado de ambulancia de un paciente desde un lugar al hospital
+// Con varios parámetros cargados mediante IoT o GPS
+
+// Declaracion del Smart Contract - AbulanceTransfer
 contract AmbulanceTransfer {
 
+    //Dirección de la ambulancia
     address payable public ambulance;
+    //Dirección del hospital    
     address public hospital;
-    address public user;
+    //Dirección del paciente
+    address payable public user;
 
-    //payment patient
+    //pago por el servicio
     uint256 private payment;     
     
-    uint256 public startDate;
+    //Parámetros del paciente
+    //Está vivo?
     bool private alive;
+    //Está consciente?
     bool private conscious;
-    //blood pressure patient IoT
+    //Presión sanguínea del paciente IoT
     struct Pressure{uint8 high; uint8 low;}  
-    Pressure private pressure;
-    //distance from ambulance to hospital in meters
-    uint64 private distanceM;
-    //heartRate patient IoT  
-    uint8 private heartRate;     
+    Pressure private pressure;    
+    //Ritmo cardiaco del paciente IoT  
+    uint8 private heartRate;  
+    //Distancia en metros desde la ambulacia hasta el hospital GPS
+    uint32 private distanceM;   
 
-    //arrival at the hospital
+    //Ha llegado al hospital?
     bool private arrival; 
 
+    //Estado del contrato
+    bool private activeContract;
+
+    // ----------- Eventos (pueden ser emitidos por el Smart Contract) -----------
     event Status(string message);
     event NewValue(string message, address hospital);
 
-    constructor(address _userIni, address _hospitalIni, bool _aliveIni, bool _consciousIni, uint64 _distanceMIni ) {
-        ambulance = payable(msg.sender);
-        startDate = block.timestamp;
-        payment = 1 ether;
-        arrival = false;  
-        pressure = Pressure(0,0);      
+    // ----------- Constructor -----------
+    // Uso: Inicializa el Smart Contract - Con los valores de dirección de ambulancia y hospital
+    constructor(address _ambulanceIni, address _hospitalIni ) {        
+       
+       //Pago de usuario por el servicio de ambulancia
+        payment = 10000000 gwei; //0.01 ether            
 
-        user = _userIni;
+        user = payable(msg.sender);
+        ambulance = payable(_ambulanceIni);
         hospital = _hospitalIni;
-        alive = _aliveIni;        
-        conscious = _consciousIni;
-        distanceM = _distanceMIni;
+
+        activeContract = true;
+
+        alive = true;        
+        conscious = true;
+        distanceM = 0;
+        arrival = false;  
+        pressure = Pressure(0,0);  
+
+        // Se emite un Evento
+        emit Status("Init transfer ambulance");
     }
 
+
     modifier isAuthorised(){
-        require(msg.sender == ambulance && !arrival);
+        require(activeContract && msg.sender == ambulance && !arrival, "You aren't authorised.");
+        _;
+    }
+
+    modifier isHospital(){
+        require(activeContract && msg.sender == hospital, "You aren't authorised.");
         _;
     }
 
@@ -54,17 +84,17 @@ contract AmbulanceTransfer {
         emit NewValue("Update value Heart Rate.", hospital);
     }
 
-    function getHeartRate() public view returns(uint8){
+    function getHeartRate() isHospital() public view returns(uint8){        
         return heartRate;
     }
 
-    function updateDistance( uint64 _distanceM ) isAuthorised() public{
+    function updateDistance( uint32 _distanceM ) isAuthorised() public{
         distanceM = _distanceM;
 
         emit NewValue("Update value Distance.", hospital);
     }
 
-    function getDistance() public view returns(uint64){
+    function getDistance() isHospital() public view returns(uint32){
         return distanceM;
     }
 
@@ -76,7 +106,7 @@ contract AmbulanceTransfer {
         emit NewValue("Update value Pressure.", hospital);
     }
 
-    function getPressure() public view returns(uint8 , uint8){
+    function getPressure() isHospital() public view returns(uint8 , uint8){
         return (pressure.high,pressure.low);
     }
 
@@ -86,7 +116,7 @@ contract AmbulanceTransfer {
         emit NewValue("Update value Alive.", hospital);
     }
 
-    function getAlive() public view returns(bool){
+    function getAlive() isHospital() public view returns(bool){
         return alive;
     }
 
@@ -96,33 +126,30 @@ contract AmbulanceTransfer {
         emit NewValue("Update value Conscious.", hospital);
     }
 
-    function getConscious() public view returns(bool){
+    function getConscious() isHospital() public view returns(bool){
         return conscious;
     }
 
-    // Funciones de pánico/emergencia
-    function stopAmbulanceTransfer() isAuthorised() public { 
+    
+    function setArrival() isAuthorised() public payable{
         arrival = true;
-        //Envia el dinero del usuario a la ambulancia
+        activeContract = false;
         ambulance.transfer(payment);
-
-        emit Status("El paciente ha llegado al hospital");
+        emit NewValue("Llegada de la ambulancia.", hospital);
     }
 
-    function getArrival() public view returns(bool){
+
+    function getArrival() isHospital() public view returns(bool){
         return arrival;
     }
 
+    // Funciones de pánico/emergencia
+    function stopAmbulanceTransfer() public payable{ 
+        require((msg.sender == ambulance || msg.sender == user), "You must be the user or ambulance");
+        activeContract = false;
+        //Envia el dinero de vuelva al usuario
+        user.transfer(payment);
 
-
-
-        
-
-
-
-
-
-
-
-
+        emit Status("Cancel transfer ambulance.");
+    }
 }
