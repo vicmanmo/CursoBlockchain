@@ -6,13 +6,39 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "patientIni",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "hospitalIni",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "aliveIni",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "consciousIni",
+						"type": "bool"
+					},
+					{
+						"internalType": "int64",
+						"name": "distanceMIni",
+						"type": "int64"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
 			{
 				"inputs": [],
-				"name": "checker",
+				"name": "ambulance",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -25,20 +51,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "hashCurriculum",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "isOwner",
+				"name": "hospital",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -51,25 +64,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "user",
+				"name": "patient",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "validated",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -89,7 +89,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Ambulance.sol": "Curriculum"
+			"Ambulance.sol": "Ambulance"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -104,11 +104,11 @@
 	},
 	"sources": {
 		"Ambulance.sol": {
-			"keccak256": "0xd6aded51fc87cf7c188bbc9a7cfd3fa25454547bb209fdd9db5a9b85a7333a7c",
+			"keccak256": "0xd3452e766269b996c0d706e210aaa4dcda43f3d9996ab4eef5f51055aaee8961",
 			"license": "Apache 2.0",
 			"urls": [
-				"bzz-raw://93ff59d5b7cafbf90c9333724de1679245c39b430d70f0509d7155850e8e6ece",
-				"dweb:/ipfs/QmYFpJVeYhtnttf5y6PHL6CqgzQTxT1UjYfsf7mc7h4L4U"
+				"bzz-raw://cd4c343a30212e8b4e1e4b04890908e3e01f13e70a1a6710972c5fdf41e7b089",
+				"dweb:/ipfs/QmZUNXEMq34wx6U4DmTmcDwsjZbnMnbBjTVcmMDZCRg6mn"
 			]
 		}
 	},
