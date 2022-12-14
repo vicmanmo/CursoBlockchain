@@ -8,25 +8,65 @@ contract Ambulance {
     address public hospital;
     address public patient;
 
-    int256 private payment;
+    //payment patient
+    uint256 private payment;     
     
+    uint256 public startDate;
     bool private alive;
     bool private conscious;
-    struct pressure{int8 high; int8 low;}
-    int64 private distanceM;
-    int8 private heartRate;
+    //blood pressure patient IoT
+    struct Pressure{uint8 high; uint8 low;}  
+    Pressure private pressure;
+    //distance from ambulance to hospital in meters
+    uint64 private distanceM;
+    //heartRate patient IoT  
+    uint8 private heartRate;     
 
-    constructor(address patientIni, address hospitalIni, bool aliveIni, bool consciousIni, int64 distanceMIni ) {
+    //arrival at the hospital
+    bool private arrival; 
+
+    event Status(string message);
+
+    constructor(address _patientIni, address _hospitalIni, bool _aliveIni, bool _consciousIni, uint64 _distanceMIni ) {
         ambulance = msg.sender;
-        patient = patientIni;
-        hospital = hospitalIni;
+        startDate = block.timestamp;
         payment = 1 ether;
-        alive = aliveIni;
-        conscious = consciousIni;
-        distanceM = distanceMIni;
+        arrival = false;  
+        pressure = Pressure(0,0);      
+
+        patient = _patientIni;
+        hospital = _hospitalIni;
+        alive = _aliveIni;        
+        conscious = _consciousIni;
+        distanceM = _distanceMIni;
+    }
+
+    modifier isAuthorised(){
+        require(msg.sender == ambulance);
+        _;
+    }
+
+    function updateValues( uint64 _distanceM, uint8 _heartRate, uint8 _high, uint8 _low ) isAuthorised() public{
+       
+        distanceM = _distanceM;
+        heartRate = _heartRate;
+
+        pressure.high = _high;
+        pressure.low = _low;
+
+        emit Status("Update values.");
     }
 
 
-    
+
+
+        
+
+
+
+
+
+
+
 
 }
