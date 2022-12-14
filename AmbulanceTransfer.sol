@@ -66,71 +66,67 @@ contract AmbulanceTransfer {
         emit Status("Init transfer ambulance");
     }
 
+    // Declaración de los modificadores
 
+    // La autorización de la ambulancia
     modifier isAuthorised(){
         require(activeContract && msg.sender == ambulance && !arrival, "You aren't authorised.");
         _;
     }
 
+    //La autorización del hospital
     modifier isHospital(){
         require(activeContract && msg.sender == hospital, "You aren't authorised.");
         _;
     }
 
-    function updateHeartRate( uint8 _heartRate) isAuthorised() public{      
-        
-        heartRate = _heartRate;       
+    // ------------ Funciones que modifican datos (set) ------------
 
+    // Funcion
+    // Nombre: updateHeartRate
+    // Uso:    Permite a la ambulancia actualizar el ritmo cardiaco del paciente    
+    function updateHeartRate( uint8 _heartRate) isAuthorised() public{              
+        heartRate = _heartRate;   
         emit NewValue("Update value Heart Rate.", hospital);
-    }
+    }    
 
-    function getHeartRate() isHospital() public view returns(uint8){        
-        return heartRate;
-    }
-
+    // Funcion
+    // Nombre: updateDistance
+    // Uso:    Permite a la ambulancia actualizar la distancia que queda hasta el hospital
     function updateDistance( uint32 _distanceM ) isAuthorised() public{
         distanceM = _distanceM;
-
         emit NewValue("Update value Distance.", hospital);
     }
 
-    function getDistance() isHospital() public view returns(uint32){
-        return distanceM;
-    }
-
-
+    // Funcion
+    // Nombre: updatePressure
+    // Uso:    Permite a la ambulancia actualizar la presión arterial del paciente
     function updatePressure( uint8 _high, uint8 _low ) isAuthorised() public{
         pressure.high = _high;
         pressure.low = _low;
-
         emit NewValue("Update value Pressure.", hospital);
     }
 
-    function getPressure() isHospital() public view returns(uint8 , uint8){
-        return (pressure.high,pressure.low);
-    }
-
+    // Funcion
+    // Nombre: updateAlive
+    // Uso:    Permite a la ambulancia actualizar el estado del paciente, si está vivo o no
     function updateAlive( bool _alive ) isAuthorised() public{
         alive = _alive;
-
         emit NewValue("Update value Alive.", hospital);
     }
 
-    function getAlive() isHospital() public view returns(bool){
-        return alive;
-    }
-
+    // Funcion
+    // Nombre: updateConscious
+    // Uso:    Permite a la ambulancia actualizar el estado del paciente, si está consciente o no
     function updateConscious( bool _conscious ) isAuthorised() public{
         conscious = _conscious;
-
         emit NewValue("Update value Conscious.", hospital);
     }
 
-    function getConscious() isHospital() public view returns(bool){
-        return conscious;
-    }
-
-    
+    // Funcion
+    // Nombre: setArrival
+    // Uso:    Permite a la ambulancia actualizar el estado la llegada al hospital, finalizar el contrato
+    //          y que se le efectúe el pago del servicio realizado.
     function setArrival() isAuthorised() public payable{
         arrival = true;
         activeContract = false;
@@ -138,18 +134,70 @@ contract AmbulanceTransfer {
         emit NewValue("Llegada de la ambulancia.", hospital);
     }
 
+    // ------------ Funciones de panico/emergencia ------------
 
-    function getArrival() isHospital() public view returns(bool){
-        return arrival;
-    }
-
-    // Funciones de pánico/emergencia
+    // Funcion
+    // Nombre: stopAmbulanceTransfer
+    // Uso:    Para el traslado de la ambulancia y devuelve el dinero al paciente.
     function stopAmbulanceTransfer() public payable{ 
         require((msg.sender == ambulance || msg.sender == user), "You must be the user or ambulance");
         activeContract = false;
         //Envia el dinero de vuelva al usuario
         user.transfer(payment);
-
         emit Status("Cancel transfer ambulance.");
     }
+
+
+    // ------------ Funciones que consultan datos (get) ------------
+
+    // Funcion
+    // Nombre: getHeartRate
+    // Logica: Consulta el ritmo cardiaco del paciente al hospital
+    function getHeartRate() isHospital() public view returns(uint8){        
+        return heartRate;
+    }
+
+    // Funcion
+    // Nombre: getDistance
+    // Logica: Consulta la distancia hasta el hospital de la ambulancia y solo al hospital
+    function getDistance() isHospital() public view returns(uint32){
+        return distanceM;
+    }    
+
+    // Funcion
+    // Nombre: getPressure
+    // Logica: Consulta el presión arterial del paciente al hospital
+    function getPressure() isHospital() public view returns(uint8 , uint8){
+        return (pressure.high,pressure.low);
+    }    
+
+    // Funcion
+    // Nombre: getAlive
+    // Logica: Consulta si está vivo el paciente al hospital
+    function getAlive() isHospital() public view returns(bool){
+        return alive;
+    }  
+
+    // Funcion
+    // Nombre: getConscious
+    // Logica: Consulta si está consciente el paciente al hospital
+    function getConscious() isHospital() public view returns(bool){
+        return conscious;
+    }
+
+    // Funcion
+    // Nombre: isArrival
+    // Logica: Consulta si ha llegado la ambulancia al hospital
+    function isArrival() isHospital() public view returns(bool){
+        return arrival;
+    }
+
+    // Funcion
+    // Nombre: isActive
+    // Logica: Consulta si el contrato está activo o no
+    function isActive() public view returns(bool){
+        return (activeContract);
+    }
+
+    
 }
