@@ -16,6 +16,8 @@ contract AmbulanceTransfer {
     address public hospital;
     //Dirección del paciente
     address payable public user;
+    //Dirección del propietario del contrato
+    address public owner;
 
     //pago por el servicio
     uint256 private payment;     
@@ -44,15 +46,13 @@ contract AmbulanceTransfer {
     event NewValue(string message, address hospital);
 
     // ----------- Constructor -----------
-    // Uso: Inicializa el Smart Contract - Con los valores de dirección de ambulancia y hospital
-    constructor(address _ambulanceIni, address _hospitalIni ) {        
+    // Uso: Inicializa el Smart Contract
+    constructor() {        
        
-       //Pago de usuario por el servicio de ambulancia
+       //Pago mínimo de usuario por el servicio de ambulancia
         payment = 10000000 gwei; //0.01 ether            
 
-        user = payable(msg.sender);
-        ambulance = payable(_ambulanceIni);
-        hospital = _hospitalIni;
+        owner = msg.sender;       
 
         activeContract = true;
 
@@ -69,7 +69,7 @@ contract AmbulanceTransfer {
     // Declaración de los modificadores
 
     // La autorización de la ambulancia
-    modifier isAuthorised(){
+    modifier isAmbulance(){
         require(activeContract && msg.sender == ambulance && !arrival, "You aren't authorised.");
         _;
     }
@@ -83,9 +83,29 @@ contract AmbulanceTransfer {
     // ------------ Funciones que modifican datos (set) ------------
 
     // Funcion
+    // Nombre: initPayment
+    // Uso:    Permite a la ambulancia actualizar el ritmo cardiaco del paciente    
+    function initPayment(address _ambulanceIni, address _hospitalIni ) public payable{ 
+            require(activeContract,"The smart contract is not active.");            
+            if (msg.value >= payment) {   
+                    ambulance = payable(_ambulanceIni);
+                    hospital = _hospitalIni;                             
+                    user = payable(msg.sender);
+                    // Actualiza el payment                
+                    payment = msg.value;
+                    // Se emite un evento
+                    emit Status("Payment made we perform ambulance service.");
+            } else {
+                    // Se emite un evento
+                    emit Status("EThe payment is not enough to perform the service. MIN: 0.01 ether");
+                    revert("The payment is not enough to perform the service. MIN: 0.01 ether");
+            }        
+    } 
+
+    // Funcion
     // Nombre: updateHeartRate
     // Uso:    Permite a la ambulancia actualizar el ritmo cardiaco del paciente    
-    function updateHeartRate( uint8 _heartRate) isAuthorised() public{              
+    function updateHeartRate( uint8 _heartRate) isAmbulance() public{              
         heartRate = _heartRate;   
         emit NewValue("Update value Heart Rate.", hospital);
     }    
@@ -93,7 +113,7 @@ contract AmbulanceTransfer {
     // Funcion
     // Nombre: updateDistance
     // Uso:    Permite a la ambulancia actualizar la distancia que queda hasta el hospital
-    function updateDistance( uint32 _distanceM ) isAuthorised() public{
+    function updateDistance( uint32 _distanceM ) isAmbulance() public{
         distanceM = _distanceM;
         emit NewValue("Update value Distance.", hospital);
     }
@@ -101,7 +121,7 @@ contract AmbulanceTransfer {
     // Funcion
     // Nombre: updatePressure
     // Uso:    Permite a la ambulancia actualizar la presión arterial del paciente
-    function updatePressure( uint8 _high, uint8 _low ) isAuthorised() public{
+    function updatePressure( uint8 _high, uint8 _low ) isAmbulance() public{
         pressure.high = _high;
         pressure.low = _low;
         emit NewValue("Update value Pressure.", hospital);
@@ -110,7 +130,7 @@ contract AmbulanceTransfer {
     // Funcion
     // Nombre: updateAlive
     // Uso:    Permite a la ambulancia actualizar el estado del paciente, si está vivo o no
-    function updateAlive( bool _alive ) isAuthorised() public{
+    function updateAlive( bool _alive ) isAmbulance() public{
         alive = _alive;
         emit NewValue("Update value Alive.", hospital);
     }
@@ -118,7 +138,7 @@ contract AmbulanceTransfer {
     // Funcion
     // Nombre: updateConscious
     // Uso:    Permite a la ambulancia actualizar el estado del paciente, si está consciente o no
-    function updateConscious( bool _conscious ) isAuthorised() public{
+    function updateConscious( bool _conscious ) isAmbulance() public{
         conscious = _conscious;
         emit NewValue("Update value Conscious.", hospital);
     }
@@ -127,9 +147,10 @@ contract AmbulanceTransfer {
     // Nombre: setArrival
     // Uso:    Permite a la ambulancia actualizar el estado la llegada al hospital, finalizar el contrato
     //          y que se le efectúe el pago del servicio realizado.
-    function setArrival() isAuthorised() public payable{
-        arrival = true;
-        activeContract = false;
+    function setArrival() isAmbulance() public payable{
+        require(activeContract,"The smart contract is not active.");     
+        arrival = true;   
+        activeContract = false;     
         ambulance.transfer(payment);
         emit NewValue("Llegada de la ambulancia.", hospital);
     }
@@ -138,9 +159,9 @@ contract AmbulanceTransfer {
 
     // Funcion
     // Nombre: stopAmbulanceTransfer
-    // Uso:    Para el traslado de la ambulancia y devuelve el dinero al paciente.
+    // Uso:    Para el contrato .
     function stopAmbulanceTransfer() public payable{ 
-        require((msg.sender == ambulance || msg.sender == user), "You must be the user or ambulance");
+        require(msg.sender == owner, "You must be the owner");
         activeContract = false;
         //Envia el dinero de vuelva al usuario
         user.transfer(payment);
