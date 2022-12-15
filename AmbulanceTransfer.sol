@@ -36,6 +36,9 @@ contract AmbulanceTransfer {
     //Distancia en metros desde la ambulacia hasta el hospital GPS
     uint32 private distanceM;
 
+    //Iniciamos el sercicio
+    bool public init;
+
     //Ha llegado al hospital?
     bool private arrival;
 
@@ -116,8 +119,18 @@ contract AmbulanceTransfer {
     // Nombre: updateDistance
     // Uso:    Permite a la ambulancia actualizar la distancia que queda hasta el hospital
     function updateDistance(uint32 _distanceM) public isAmbulance {
+        //Cuando actualizamos la distancia por primera vez si el inicio no se ha notificado se inicializa a true
+        if(!init) init = true;
         distanceM = _distanceM;
         emit NewValue("Update value Distance.", hospital);
+    }
+
+    // Funcion
+    // Nombre: inicio
+    // Uso:    Permite a la ambulancia iniciar el servicio y avisar al hospital
+    function inicio() public isAmbulance {
+        init = true;
+        emit NewValue("Init service.", hospital);
     }
 
     // Funcion
