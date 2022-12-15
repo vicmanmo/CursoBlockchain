@@ -50,14 +50,16 @@ contract AmbulanceTransfer {
     // Uso: Inicializa el Smart Contract, parámetros de direcciones de la ambulancia y del hospital de destino
     constructor(address _ambulanceIni, address _hospitalIni) payable {
         //Pago mínimo de usuario por el servicio de ambulancia
-        payment = 10000000 gwei; //0.01 ether
+        uint256 _payment = 10000000 gwei; //0.01 ether
 
-        if (msg.value >= payment) {
+        user = payable(msg.sender);
+        // Actualiza el payment
+        payment = msg.value;
+
+        if (payment >= _payment) {
             ambulance = payable(_ambulanceIni);
-            hospital = _hospitalIni;
-            user = payable(msg.sender);
-            // Actualiza el payment
-            payment = msg.value;
+            hospital = _hospitalIni;           
+            
             //activamos el contrato
             activeContract = true;
 
@@ -72,9 +74,11 @@ contract AmbulanceTransfer {
         } else {
             //Desactivamos el contrato
             activeContract = false;
+            //Se devuelve el dinero al usuario
+            user.transfer(payment);
             // Se emite un evento
-            emit Status("EThe payment is not enough to perform the service. MIN: 0.01 ether");
-            revert("The payment is not enough to perform the service. MIN: 0.01 ether");
+            emit Status("The payment is not enough to perform the service. MIN: 0.01 ether");
+            //revert("The payment is not enough to perform the service. MIN: 0.01 ether");
         }        
     }
 
