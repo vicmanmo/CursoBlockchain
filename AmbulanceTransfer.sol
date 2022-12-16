@@ -46,7 +46,7 @@ contract AmbulanceTransfer {
     bool private arrival;
 
     //Estado del contrato
-    bool private activeContract;
+    bool public activeContract;
 
     // ----------- Eventos (pueden ser emitidos por el Smart Contract) -----------
     event Status(string message);
@@ -87,8 +87,11 @@ contract AmbulanceTransfer {
 
     // ------------ Funciones que modifican datos (set) ------------
 
+    // Funcion
+    // Nombre: initService
+    // Uso:    Inicia el servicio de ambulancia el usuario hacia un hospital
     function initService(address _hospitalIni) public payable{
-        require(!activeContract, "Must be active the smart contract.");
+        require(!activeContract, "Must be actived the smart contract.");
         user = payable(msg.sender);
         // Actualiza el payment
         payment = msg.value;
@@ -111,6 +114,7 @@ contract AmbulanceTransfer {
 
             // Se emite un evento
             emit Status("Payment made we perform ambulance service.");
+            emit NewValue("The ambulance service has started.", hospital);
         } else {            
             //Se devuelve el dinero al usuario
             user.transfer(payment);
@@ -181,7 +185,7 @@ contract AmbulanceTransfer {
         arrival = true;
         init = false;
         ambulance.transfer(payment);
-        emit NewValue("Llegada de la ambulancia.", hospital);
+        emit NewValue("Arrival of the ambulance.", hospital);
     }
 
     // ------------ Funciones de panico/emergencia ------------
@@ -241,10 +245,4 @@ contract AmbulanceTransfer {
         return arrival;
     }
 
-    // Funcion
-    // Nombre: isActive
-    // Logica: Consulta si el contrato está activo o no
-    function isActive() public view returns (bool) {
-        return (activeContract);
-    }
 }
