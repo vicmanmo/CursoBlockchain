@@ -20,6 +20,9 @@ contract AmbulanceTransfer {
     //pago por el servicio
     uint256 public payment;
 
+    //Pago mínimo de usuario por el servicio de ambulancia
+    uint256 _payment = 10000000 gwei; //0.01 ether
+
     //Parámetros del paciente
     //Está vivo?
     bool private alive;
@@ -51,38 +54,15 @@ contract AmbulanceTransfer {
 
     // ----------- Constructor -----------
     // Uso: Inicializa el Smart Contract, parámetros de direcciones de la ambulancia y del hospital de destino
-    constructor(address _ambulanceIni, address _hospitalIni) payable {
-        //Pago mínimo de usuario por el servicio de ambulancia
-        uint256 _payment = 10000000 gwei; //0.01 ether
-
-        user = payable(msg.sender);
-        // Actualiza el payment
-        payment = msg.value;
-
-        if (payment >= _payment) {
-            ambulance = payable(_ambulanceIni);
-            hospital = _hospitalIni;           
-            
-            //activamos el contrato
-            activeContract = true;
-
-            alive = true;
-            conscious = true;
-            distanceM = 0;
-            arrival = false;
-            pressure = Pressure(0, 0);
-
-            // Se emite un evento
-            emit Status("Payment made we perform ambulance service.");
-        } else {
-            //Desactivamos el contrato
-            activeContract = false;
-            //Se devuelve el dinero al usuario
-            user.transfer(payment);
-            // Se emite un evento
-            emit Status("The payment is not enough to perform the service. MIN: 0.01 ether");
-            //revert("The payment is not enough to perform the service. MIN: 0.01 ether");
-        }        
+    constructor() payable {
+        //El propietario del smart contract es la ambulancia
+        ambulance = payable(msg.sender);        
+        //activamos el contrato
+        activeContract = true;
+        init = false;
+         
+        // Se emite un evento
+        emit Status("Init ambulance service. Payment MIN: 0.01 ether.");            
     }
 
     // Declaración de los modificadores
@@ -90,7 +70,7 @@ contract AmbulanceTransfer {
     // La autorización de la ambulancia
     modifier isAmbulance() {
         require(
-            activeContract && msg.sender == ambulance && !arrival,
+            activeContract && msg.sender == ambulance,
             "You aren't authorised."
         );
         _;
@@ -107,6 +87,42 @@ contract AmbulanceTransfer {
 
     // ------------ Funciones que modifican datos (set) ------------
 
+    function initService(address _hospitalIni) public payable{
+        require(!activeContract, "Must be active the smart contract.");
+        user = payable(msg.sender);
+        // Actualiza el payment
+        payment = msg.value;
+
+        if (!init && payment >= _payment) {
+            
+            hospital = _hospitalIni;           
+            
+            //activamos el contrato
+            activeContract = true;
+
+            //iniciamos el servicio
+            init = true;
+
+            alive = true;
+            conscious = true;
+            distanceM = 0;
+            arrival = false;
+            pressure = Pressure(0, 0);
+
+            // Se emite un evento
+            emit Status("Payment made we perform ambulance service.");
+        } else {            
+            //Se devuelve el dinero al usuario
+            user.transfer(payment);
+            // Se emite un evento
+            if(init) {
+                emit Status("The ambulance service is used.");
+            }else{
+                emit Status("The payment is not enough to perform the service. MIN: 0.01 ether");
+            }
+        }       
+    }
+
     // Funcion
     // Nombre: updateHeartRate
     // Uso:    Permite a la ambulancia actualizar el ritmo cardiaco del paciente
@@ -118,19 +134,17 @@ contract AmbulanceTransfer {
     // Funcion
     // Nombre: updateDistance
     // Uso:    Permite a la ambulancia actualizar la distancia que queda hasta el hospital
-    function updateDistance(uint32 _distanceM) public isAmbulance {
-        //Cuando actualizamos la distancia por primera vez si el inicio no se ha notificado se inicializa a true
-        if(!init) init = true;
+    function updateDistance(uint32 _distanceM) public isAmbulance {       
         distanceM = _distanceM;
         emit NewValue("Update value Distance.", hospital);
     }
 
     // Funcion
-    // Nombre: inicio
-    // Uso:    Permite a la ambulancia iniciar el servicio y avisar al hospital
-    function inicio() public isAmbulance {
-        init = true;
-        emit NewValue("Init service.", hospital);
+    // Nombre: stopService
+    // Uso:    Permite a la ambulancia parar el servicio
+    function stopService() public isAmbulance {
+        init = false;
+        emit Status("Stop service ambulance.");
     }
 
     // Funcion
@@ -160,13 +174,12 @@ contract AmbulanceTransfer {
 
     // Funcion
     // Nombre: setArrival
-    // Uso:    Permite a la ambulancia actualizar el estado la llegada al hospital, finalizar el contrato
+    // Uso:    Permite a la ambulancia actualizar el estado la llegada al hospital, finalizar el servicio
     //          y que se le efectúe el pago del servicio realizado.
-    function setArrival() public payable isAmbulance {
-        require(activeContract, "The smart contract is not active.");
+    function setArrival() public payable isAmbulance {        
         distanceM = 0;
         arrival = true;
-        activeContract = false;
+        init = false;
         ambulance.transfer(payment);
         emit NewValue("Llegada de la ambulancia.", hospital);
     }
@@ -177,7 +190,7 @@ contract AmbulanceTransfer {
     // Nombre: stopAmbulanceTransfer
     // Uso:    Para el contrato .
     function stopAmbulanceTransfer() public payable {
-        require(msg.sender == user, "You must be the owner");
+        require(msg.sender == ambulance, "You must be the owner");
         activeContract = false;
         //Envia el dinero de vuelva al usuario
         user.transfer(payment);
