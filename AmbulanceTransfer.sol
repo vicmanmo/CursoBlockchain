@@ -139,15 +139,7 @@ contract AmbulanceTransfer {
     function updateDistance(uint32 _distanceM) public isAmbulance {       
         distanceM = _distanceM;
         emit NewValue("Update value Distance.", hospital);
-    }
-
-    // Funcion
-    // Nombre: stopService
-    // Uso:    Permite a la ambulancia parar el servicio
-    function stopService() public isAmbulance {
-        init = false;
-        emit Status("Stop service ambulance.");
-    }
+    }    
 
     // Funcion
     // Nombre: updatePressure
