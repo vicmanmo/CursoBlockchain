@@ -21,7 +21,7 @@ contract AmbulanceTransfer {
     uint256 public payment;
 
     //Pago mínimo de usuario por el servicio de ambulancia
-    uint256 _payment = 10000000 gwei; //0.01 ether
+    uint256 private _payment = 10000000 gwei; //0.01 ether
 
     //Parámetros del paciente
     //Está vivo?
@@ -190,12 +190,12 @@ contract AmbulanceTransfer {
 
     // Funcion
     // Nombre: stopAmbulanceTransfer
-    // Uso:    Para el contrato .
+    // Uso:    Para el contrato.
     function stopAmbulanceTransfer() public payable {
         require(msg.sender == ambulance, "You must be the owner");
         activeContract = false;
-        //Envia el dinero de vuelva al usuario último
-        user.transfer(payment);
+        //Envia el dinero de vuelva a la ambulancia
+        ambulance.transfer(payment);
         emit Status("Cancel transfer ambulance.");
     }
 
