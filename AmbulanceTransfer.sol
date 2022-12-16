@@ -53,7 +53,7 @@ contract AmbulanceTransfer {
     event NewValue(string message, address hospital);
 
     // ----------- Constructor -----------
-    // Uso: Inicializa el Smart Contract, parámetros de direcciones de la ambulancia y del hospital de destino
+    // Uso: Inicializa el Smart Contract
     constructor() payable {
         //El propietario del smart contract es la ambulancia
         ambulance = payable(msg.sender);        
@@ -91,18 +91,16 @@ contract AmbulanceTransfer {
     // Nombre: initService
     // Uso:    Inicia el servicio de ambulancia el usuario hacia un hospital
     function initService(address _hospitalIni) public payable{
-        require(!activeContract, "Must be actived the smart contract.");
-        user = payable(msg.sender);
-        // Actualiza el payment
-        payment = msg.value;
+        require(activeContract, "Must be actived the smart contract.");        
 
-        if (!init && payment >= _payment) {
-            
-            hospital = _hospitalIni;           
-            
-            //activamos el contrato
-            activeContract = true;
+        if (!init && msg.value >= _payment) {
 
+            user = payable(msg.sender);
+            // Actualiza el payment
+            payment = msg.value;
+            
+            hospital = _hospitalIni;   
+            
             //iniciamos el servicio
             init = true;
 
@@ -116,8 +114,8 @@ contract AmbulanceTransfer {
             emit Status("Payment made we perform ambulance service.");
             emit NewValue("The ambulance service has started.", hospital);
         } else {            
-            //Se devuelve el dinero al usuario
-            user.transfer(payment);
+            //Se devuelve el dinero al usuario que ha intentado usar el servicio
+            payable(msg.sender).transfer(msg.value);
             // Se emite un evento
             if(init) {
                 emit Status("The ambulance service is used.");
@@ -196,7 +194,7 @@ contract AmbulanceTransfer {
     function stopAmbulanceTransfer() public payable {
         require(msg.sender == ambulance, "You must be the owner");
         activeContract = false;
-        //Envia el dinero de vuelva al usuario
+        //Envia el dinero de vuelva al usuario último
         user.transfer(payment);
         emit Status("Cancel transfer ambulance.");
     }
