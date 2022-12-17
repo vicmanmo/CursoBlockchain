@@ -59,6 +59,7 @@ contract AmbulanceTransfer {
         ambulance = payable(msg.sender);        
         //activamos el contrato
         activeContract = true;
+        //El servicio está inactivo.
         init = false;
          
         // Se emite un evento
@@ -94,15 +95,14 @@ contract AmbulanceTransfer {
         require(activeContract, "Must be actived the smart contract.");        
 
         if (!init && msg.value >= _payment) {
-
+            //iniciamos el servicio
+            init = true;
+            //Usuario del servicio
             user = payable(msg.sender);
             // Actualiza el payment
             payment = msg.value;
-            
-            hospital = _hospitalIni;   
-            
-            //iniciamos el servicio
-            init = true;
+            //Hospital de destino
+            hospital = _hospitalIni;              
 
             alive = true;
             conscious = true;
@@ -172,9 +172,10 @@ contract AmbulanceTransfer {
     //          y que se le efectúe el pago del servicio realizado.
     function setArrival() public payable isAmbulance {        
         distanceM = 0;
-        arrival = true;
-        init = false;
+        arrival = true;   
+        //La ambulancia recibe el pago del servicio    
         ambulance.transfer(payment);
+        init = false;
         emit NewValue("Arrival of the ambulance.", hospital);
     }
 
