@@ -6,7 +6,7 @@ pragma solidity >0.8.14;
 // Nombre: Translado en Ambulancia
 // Logica: Implementa el translado de ambulancia de un paciente desde un lugar al hospital
 // Con varios parámetros cargados mediante IoT o GPS
-// Pagp por el servicio
+// Pago por el servicio
 
 // Declaracion del Smart Contract - AbulanceTransfer
 contract AmbulanceTransfer {
