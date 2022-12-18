@@ -49,12 +49,14 @@ contract AmbulanceTransfer {
     bool public activeContract;
 
     // ----------- Eventos (pueden ser emitidos por el Smart Contract) -----------
+    //Evento que especifica el estado.
     event Status(string message);
+    //Evento que manda un mensaje de cambio de valor indicando al hospital a quien va dirigido.
     event NewValue(string message, address hospital);
 
     // ----------- Constructor -----------
     // Uso: Inicializa el Smart Contract
-    constructor() payable {
+    constructor() {
         //El propietario del smart contract es la ambulancia
         ambulance = payable(msg.sender);        
         //activamos el contrato
@@ -66,8 +68,8 @@ contract AmbulanceTransfer {
         emit Status("Init ambulance service. Payment MIN: 0.01 ether.");            
     }
 
-    // Declaración de los modificadores
-
+    // ------------ Declaración de los modificadores ------------
+    
     // La autorización de la ambulancia
     modifier isAmbulance() {
         require(
