@@ -1,0 +1,46 @@
+{
+    "name": "Aldebaran",
+    "description": "Aldebaran is the brightest star in the zodiac constellation of Taurus.",
+    "image": "ipfs://bafybeih6yi2bjq5ljc74wzohugyczkpt5otfhhn6lbiyjqugcqpxabp6au/aldebaran.jpg",
+    "external_url": "https://www.cfp.upv.es",
+    "attributes": [
+        {
+            "trait_type": "Spectral type",
+            "value": "K5+ III"
+        },
+        {
+            "trait_type": "Color",
+            "value": "+1.44 (B-V) +1.92 (U-B)"
+        },
+        {
+            "trait_type": "Evolutionary stage",
+            "value": "Red giant branch"
+        },        
+        {
+            "trait_type": "Constellation",
+            "value": "Taurus"
+        },
+        {            
+            "trait_type": "Right ascension",
+            "value": "04h 35m 55.23907s"
+        },
+        {            
+            "trait_type": "Declination",
+            "value": "+16° 30' 33.4885''"
+        },
+        {
+            "trait_type": "Level brightest",
+            "value": 14
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Age",
+            "value": 6.4
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Distance",
+            "value": 65.3
+        }
+    ]
+}

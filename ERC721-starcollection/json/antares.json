@@ -1,0 +1,46 @@
+{
+    "name": "Antares",
+    "description": "Antares is the brightest star in the constellation of Scorpius.",
+    "image": "ipfs://bafybeih6yi2bjq5ljc74wzohugyczkpt5otfhhn6lbiyjqugcqpxabp6au/antares.jpg",
+    "external_url": "https://www.cfp.upv.es",
+    "attributes": [
+        {
+            "trait_type": "Spectral type",
+            "value": "M1.5Iab-Ib + B2.5V"
+        },
+        {
+            "trait_type": "Color",
+            "value": "+1.83 (B-V) +1.34 (U-B)"
+        },
+        {
+            "trait_type": "Evolutionary stage",
+            "value": "Red supergiant"
+        },        
+        {
+            "trait_type": "Constellation",
+            "value": "Scorpius"
+        },
+        {            
+            "trait_type": "Right ascension",
+            "value": "16h 29m 24.45970s"
+        },
+        {            
+            "trait_type": "Declination",
+            "value": "-26° 25' 55.2094''"
+        },
+        {
+            "trait_type": "Level brightest",
+            "value": 15
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Age",
+            "value": 15
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Distance",
+            "value": 550
+        }
+    ]
+}

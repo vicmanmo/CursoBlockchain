@@ -1,0 +1,46 @@
+{
+    "name": "Vega",
+    "description": "Vega is the brightest star in the northern constellation of Lyra. It is the fifth-brightest star in the night sky, and the second-brightest star in the northern celestial hemisphere, after Arcturus.",
+    "image": "ipfs://bafybeih6yi2bjq5ljc74wzohugyczkpt5otfhhn6lbiyjqugcqpxabp6au/vega.jpg",
+    "external_url": "https://www.cfp.upv.es",
+    "attributes": [
+        {
+            "trait_type": "Spectral type",
+            "value": "A0Va"
+        },
+        {
+            "trait_type": "Color",
+            "value": "+0.00 (B-V) -0.01 (U-B)"
+        },
+        {
+            "trait_type": "Evolutionary stage",
+            "value": "Main sequence"
+        }, 
+        {
+            "trait_type": "Constellation",
+            "value": "Lyra"
+        },
+        {            
+            "trait_type": "Right ascension",
+            "value": "18h 36m 56.33635s"
+        },
+        {            
+            "trait_type": "Declination",
+            "value": "+38° 47' 01.2802''"
+        },        
+        {
+            "trait_type": "Level brightest",
+            "value": 5
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Age",
+            "value": 455
+        },
+        {
+            "display_type": "boost_number",
+            "trait_type": "Distance",
+            "value": 25.04
+        }
+    ]
+}
