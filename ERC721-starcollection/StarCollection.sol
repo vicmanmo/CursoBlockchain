@@ -10,7 +10,7 @@ contract StarCollection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     constructor() ERC721("StarCollection", "STAR") {}
 
     function _baseURI() internal pure override returns (string memory) {
-        return "TO DO";
+        return "https://bafybeihgeph7e4vtgtcysqvsmuhgw3zvnzi2zvieqq3x6zsqdgfgvqndea.ipfs.nftstorage.link/";
     }
 
     function safeMint(address to, uint256 tokenId, string memory uri)
