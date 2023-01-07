@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract StarCollection is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
-    constructor() ERC721("StarCollection", "STAR") {}
+    constructor() ERC721("Star Collection", "STAR") {}
 
     function _baseURI() internal pure override returns (string memory) {
         return "https://bafybeihgeph7e4vtgtcysqvsmuhgw3zvnzi2zvieqq3x6zsqdgfgvqndea.ipfs.nftstorage.link/";
